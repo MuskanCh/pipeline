@@ -12,9 +12,6 @@ node {
         stage('deploy'){
             sh 'microk8s kubectl apply -f deployment.yml'
         }   
-        stage('speak'){
-            slackSend color:'#00ff00', message:'Build Succesfully'
-        }
     } 
     catch (e) {
         // If there was an exception thrown, the build failed
@@ -31,7 +28,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
   def colorName = 'RED'
   def colorCode = '#FF0000'
-  def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}] [${env.BUILD_URL}]'"
   // Override default values based on build status
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
@@ -46,18 +43,4 @@ def notifyBuild(String buildStatus = 'STARTED') {
   // Send notifications
   slackSend (color: colorCode, message: summary)
 }
-node {
-    stage('SCM Checkout'){
-        git branch: 'main', credentialsId: 'de47bbde-eb33-42de-9e27-51ba9d05924e', 
-        url: 'https://github.com/MuskanCh/pipeline.git'    
-    }
-    stage('pull'){
-        sh 'docker run hello-world'
-    }
-    stage('deploy'){
-        sh 'microk8s kubectl apply -f deployment.yml'
-    }
-    stage('speak'){
-        slackSend color:'#00ff00', message:'Build Succesfully' 
-    }
-}
+
