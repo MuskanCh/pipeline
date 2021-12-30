@@ -23,6 +23,6 @@ node {
 }
 def notifyBuild(String buildStatus = 'STARTED') {
   def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}] [${env.BUILD_URL}]'"
-  slackSend (color: colorCode, message: summary)
+  slackSend message: summary
 }
 
