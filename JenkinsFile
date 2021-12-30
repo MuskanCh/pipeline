@@ -18,7 +18,7 @@ node {
             }
         }
         stage('message'){
-            slacksend message: ${env.GIT_COMMIT_MSG}
+            slacksend message: "${env.GIT_COMMIT_MSG}"
         }
     } 
     catch (e) {
