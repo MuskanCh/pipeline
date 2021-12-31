@@ -1,49 +1,9 @@
 node {
-    try {
-        notifyBuild('STARTED')
-
-        stage('SCM Checkout'){
-            git branch: 'main', credentialsId: 'de47bbde-eb33-42de-9e27-51ba9d05924e',
-            url: 'https://github.com/MuskanCh/pipeline.git'
-        }
-        stage('pull'){
-            sh 'docker run hello-world'
-        }
-        stage('deploy'){
-            sh 'microk8s kubectl apply -f deployment.yml'
-        }   
-    //    stage('get_commit_msg') {
-     //       script {
-      //      env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
-   //         }
-    //    }
-    //    stage('message'){
-    //        slackSend message: "${env.GIT_COMMIT_MSG}"
-    //    }
-    } 
-    catch (e) {
-        currentBuild.result = "FAILED"
-        throw e
-    } 
-    finally {
-        notifyBuild(currentBuild.result)
+    stage('SCM Checkout'){
+        git branch: 'main', credentialsId: 'de47bbde-eb33-42de-9e27-51ba9d05924e',
+        url: 'https://github.com/MuskanCh/pipeline.git'
     }
-}
-def notifyBuild(String buildStatus = 'STARTED') {
-  buildStatus =  buildStatus ?: 'SUCCESSFUL'
-  def colorName = 'RED'
-  def colorCode = '#FF0000'
-  def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}] [${env.BUILD_URL}]'"
-  if (buildStatus == 'STARTED') {
-    color = 'YELLOW'
-    colorCode = '#FFFF00'
-  } 
-  else if (buildStatus == 'SUCCESSFUL') {
-    color = 'GREEN'
-    colorCode = '#00FF00'
-  } else {
-    color = 'RED'
-    colorCode = '#FF0000'
-  }
-  slackSend (color: colorCode, message: summary)
+    stage('build'){
+            sh 'docker build -f Dockerfile .'
+    }
 }
