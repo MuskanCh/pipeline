@@ -12,14 +12,14 @@ node {
         stage('deploy'){
             sh 'microk8s kubectl apply -f deployment.yml'
         }   
-        stage('get_commit_msg') {
-            script {
-            env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
-            }
-        }
-        stage('message'){
-            slackSend message: "${env.GIT_COMMIT_MSG}"
-        }
+    //    stage('get_commit_msg') {
+     //       script {
+      //      env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+   //         }
+    //    }
+    //    stage('message'){
+    //        slackSend message: "${env.GIT_COMMIT_MSG}"
+    //    }
     } 
     catch (e) {
         currentBuild.result = "FAILED"
