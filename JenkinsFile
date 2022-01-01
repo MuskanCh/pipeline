@@ -1,8 +1,4 @@
 node {
-    stage('SCM Checkout'){
-        git branch: 'main', credentialsId: 'de47bbde-eb33-42de-9e27-51ba9d05924e',
-        url: 'https://github.com/MuskanCh/pipeline.git'
-    }
     stage('build'){
             sh 'docker build -f Dockerfile .'
     }
